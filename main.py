@@ -2,6 +2,7 @@ import math
 import random
 
 import pygame
+from pygame.sprite import collide_rect
 
 import enemy
 import entity
@@ -28,6 +29,8 @@ time3cur = 0
 zom3ord = [1, 1, 2, 3, 1, 4, 2, 1, 1, 2, 3, 2, 1, 2, 1, 2, 1, 2, 3, 1]
 zom3cor = -1
 
+zembietouch = [0,0,0,0,0,0]
+
 button_play_rect = pygame.Rect(screen_x/20,screen_y/7,screen_x/5,screen_y/7)
 button_sound_rect = pygame.Rect(screen_x/100,screen_y/(35/32),screen_x/20,screen_y/14)
 button_exit_rect = pygame.Rect(screen_x/(50/47),screen_y/70,screen_x/20,screen_y/14)
@@ -40,6 +43,7 @@ button_wallnut = pygame.Rect(screen_x/50, screen_y/(3+3/4), screen_x/9, screen_y
 button_delete = pygame.Rect(screen_x/(7+1/3), screen_y/35, screen_x/9, screen_y/12)
 grids = []
 lawns = []
+houses = []
 Rect = pygame.Rect
 xoffset = 0
 yoffset = screen_y/(875/100)
@@ -52,7 +56,10 @@ for i in range(9):
 for aa in range(6):
     lawns.append(Rect(screen_x/(100/15), screen_y/(700/yoffset), screen_x/(100/4), screen_y/(8+3/4)))
     yoffset += 80
-
+yoffset = screen_y / (875 / 100)
+for aj in range(6):
+    houses.append(Rect(screen_x / (100 / 11), screen_y / (700 / yoffset), screen_x / (100 / 4), screen_y / (8 + 3 / 4)))
+    yoffset += 80
 track_main = pygame.mixer.Sound("sounds/02. Crazy Dave (Intro Theme).mp3")
 sfx_lawnmower = pygame.mixer.Sound("sounds/SFX lawnmower.mp3")
 
@@ -117,6 +124,8 @@ pvz_czombie17 = pygame.image.load("images/ConeheadZombie/ConeheadZombie_17.png")
 pvz_czombie18 = pygame.image.load("images/ConeheadZombie/ConeheadZombie_18.png")
 pvz_czombie19 = pygame.image.load("images/ConeheadZombie/ConeheadZombie_19.png")
 pvz_czombie20 = pygame.image.load("images/ConeheadZombie/ConeheadZombie_20.png")
+pvz_diszombie = pygame.image.load("images/DiscoZombie/Discoingamerednder.png")
+pvz_digzombie = pygame.image.load("images/DiggerZombie/Diggersrpite.png")
 pvz_sunflower1 = pygame.image.load("images/Sunflower/SunFlower_1.png")
 pvz_sunflower2 = pygame.image.load("images/Sunflower/SunFlower_2.png")
 pvz_sunflower3 = pygame.image.load("images/Sunflower/SunFlower_3.png")
@@ -148,6 +157,22 @@ pvz_peashooter10 = pygame.image.load("images/Peashooter/Peashooter_10.png")
 pvz_peashooter11 = pygame.image.load("images/Peashooter/Peashooter_11.png")
 pvz_peashooter12 = pygame.image.load("images/Peashooter/Peashooter_12.png")
 pvz_peashooter13 = pygame.image.load("images/Peashooter/Peashooter_13.png")
+pvz_wallnut1 = pygame.image.load("images/Wallnut/WallNut_1.png")
+pvz_wallnut2 = pygame.image.load("images/Wallnut/WallNut_2.png")
+pvz_wallnut3 = pygame.image.load("images/Wallnut/WallNut_3.png")
+pvz_wallnut4 = pygame.image.load("images/Wallnut/WallNut_4.png")
+pvz_wallnut5 = pygame.image.load("images/Wallnut/WallNut_5.png")
+pvz_wallnut6 = pygame.image.load("images/Wallnut/WallNut_6.png")
+pvz_wallnut7 = pygame.image.load("images/Wallnut/WallNut_7.png")
+pvz_wallnut8 = pygame.image.load("images/Wallnut/WallNut_8.png")
+pvz_wallnut9 = pygame.image.load("images/Wallnut/WallNut_9.png")
+pvz_wallnut10 = pygame.image.load("images/Wallnut/WallNut_10.png")
+pvz_wallnut11 = pygame.image.load("images/Wallnut/WallNut_11.png")
+pvz_wallnut12 = pygame.image.load("images/Wallnut/WallNut_12.png")
+pvz_wallnut13 = pygame.image.load("images/Wallnut/WallNut_13.png")
+pvz_wallnut14 = pygame.image.load("images/Wallnut/WallNut_14.png")
+pvz_wallnut15 = pygame.image.load("images/Wallnut/WallNut_15.png")
+pvz_wallnut16 = pygame.image.load("images/Wallnut/WallNut_16.png")
 
 plants = []
 plantpos = []
@@ -157,6 +182,8 @@ sunflowerlist = []
 zomie_img = [pvz_zombie, pvz_zombie1, pvz_zombie2, pvz_zombie3, pvz_zombie4, pvz_zombie5, pvz_zombie6, pvz_zombie7, pvz_zombie8, pvz_zombie9, pvz_zombie10, pvz_zombie11, pvz_zombie12, pvz_zombie13, pvz_zombie14]
 bzomie_img = [pvz_bzombie, pvz_bzombie1, pvz_bzombie2, pvz_bzombie3, pvz_bzombie4, pvz_bzombie5, pvz_bzombie6, pvz_bzombie7, pvz_bzombie8, pvz_bzombie9, pvz_bzombie10, pvz_bzombie11, pvz_bzombie12, pvz_bzombie13, pvz_bzombie14]
 czomie_img = [pvz_czombie, pvz_czombie1, pvz_czombie2, pvz_czombie3, pvz_czombie4, pvz_czombie5, pvz_czombie6, pvz_czombie7, pvz_czombie8, pvz_czombie9, pvz_czombie10, pvz_czombie11, pvz_czombie12, pvz_czombie13, pvz_czombie14, pvz_czombie15, pvz_czombie16, pvz_czombie17, pvz_czombie18, pvz_czombie19, pvz_czombie20]
+diszomie_img = [pvz_diszombie]
+digzomie_img = [pvz_digzombie]
 
 pvz_main_img = pygame.transform.scale(pvz_main_img, [screen_x,screen_y]) # ШАГ 2: Делаем нам нужный размер
 pvz_house = pygame.transform.scale(pvz_house, [screen_x, screen_y])
@@ -201,9 +228,26 @@ pvz_peashooter10 = pygame.transform.scale(pvz_peashooter10, [screen_x/17,screen_
 pvz_peashooter11 = pygame.transform.scale(pvz_peashooter11, [screen_x/17,screen_y/12])
 pvz_peashooter12 = pygame.transform.scale(pvz_peashooter12, [screen_x/17,screen_y/12])
 pvz_peashooter13 = pygame.transform.scale(pvz_peashooter13, [screen_x/17,screen_y/12])
+pvz_wallnut1 = pygame.transform.scale(pvz_wallnut1, [screen_x/17,screen_y/12])
+pvz_wallnut2 = pygame.transform.scale(pvz_wallnut2, [screen_x/17,screen_y/12])
+pvz_wallnut3 = pygame.transform.scale(pvz_wallnut3, [screen_x/17,screen_y/12])
+pvz_wallnut4 = pygame.transform.scale(pvz_wallnut4, [screen_x/17,screen_y/12])
+pvz_wallnut5 = pygame.transform.scale(pvz_wallnut5, [screen_x/17,screen_y/12])
+pvz_wallnut6 = pygame.transform.scale(pvz_wallnut6, [screen_x/17,screen_y/12])
+pvz_wallnut7 = pygame.transform.scale(pvz_wallnut7, [screen_x/17,screen_y/12])
+pvz_wallnut8 = pygame.transform.scale(pvz_wallnut8, [screen_x/17,screen_y/12])
+pvz_wallnut9 = pygame.transform.scale(pvz_wallnut9, [screen_x/17,screen_y/12])
+pvz_wallnut10 = pygame.transform.scale(pvz_wallnut10, [screen_x/17,screen_y/12])
+pvz_wallnut11 = pygame.transform.scale(pvz_wallnut11, [screen_x/17,screen_y/12])
+pvz_wallnut12 = pygame.transform.scale(pvz_wallnut12, [screen_x/17,screen_y/12])
+pvz_wallnut13 = pygame.transform.scale(pvz_wallnut13, [screen_x/17,screen_y/12])
+pvz_wallnut14 = pygame.transform.scale(pvz_wallnut14, [screen_x/17,screen_y/12])
+pvz_wallnut15 = pygame.transform.scale(pvz_wallnut15, [screen_x/17,screen_y/12])
+pvz_wallnut16 = pygame.transform.scale(pvz_wallnut16, [screen_x/17,screen_y/12])
 
 pvz_snfs = [pvz_sunflower1, pvz_sunflower2, pvz_sunflower3, pvz_sunflower4, pvz_sunflower5, pvz_sunflower6, pvz_sunflower7, pvz_sunflower8, pvz_sunflower9, pvz_sunflower10, pvz_sunflower11, pvz_sunflower12, pvz_sunflower13, pvz_sunflower14, pvz_sunflower15, pvz_sunflower16, pvz_sunflower17, pvz_sunflower18]
 pvz_pshs = [pvz_peashooter1, pvz_peashooter2, pvz_peashooter3, pvz_peashooter4, pvz_peashooter5, pvz_peashooter6, pvz_peashooter7, pvz_peashooter8, pvz_peashooter9, pvz_peashooter10, pvz_peashooter11, pvz_peashooter12, pvz_peashooter13]
+pvz_pots = [pvz_wallnut1, pvz_wallnut2, pvz_wallnut3, pvz_wallnut4, pvz_wallnut5, pvz_wallnut6, pvz_wallnut7, pvz_wallnut8, pvz_wallnut9, pvz_wallnut10, pvz_wallnut11, pvz_wallnut12, pvz_wallnut13, pvz_wallnut14, pvz_wallnut15, pvz_wallnut16]
 
 lawnmows = []
 for ab in range(6):
@@ -222,18 +266,18 @@ for af in range(6):
 
 
 bullets = []
-def_bullet = [10, 1, 0, 0] ## 10 - Урон, 1 - Скорость, 0 - Позиция x, 0 - Позиция y.
+def_bullet = [9.5, 1, 0, 0] ## 10 - Урон, 1 - Скорость, 0 - Позиция x, 0 - Позиция y.
 
 
-zembie = enemy.Enemy(100, 0.4, screen, screen_x/(1+3/17), 140, 100, 100, random.randint(1, 6))
-conzembie = enemy.Enemy(200, 0.1, screen, screen_x/(1+3/17), 140, 100, 100, random.randint(1, 6))
+zembie = enemy.Enemy(100, 0.4, screen, screen_x/(1+3/17), 140, 100, 100, random.randint(1, 6), False, None)
+conzembie = enemy.Enemy(200, 0.1, screen, screen_x/(1+3/17), 140, 100, 100, random.randint(1, 6), False, None)
 
 zom3cyc = [zembie, zembie, zembie, conzembie, conzembie, conzembie, conzembie, zembie, zembie, zembie, zembie, conzembie, zembie, conzembie, zembie, zembie, zembie, conzembie]
 zom3cur = 0
 zemb = zom3cyc[zom3cur]
 
 
-money = 100
+money = 50
 
 volume = 0.1
 
@@ -261,6 +305,8 @@ imgcycle_snf = -1
 imgcycle_snf2 = 0
 imgcycle_psh = -1
 imgcycle_psh2 = 0
+imgcycle_pot = -1
+imgcycle_pot2 = 0
 pss = 0
 time0 = 0
 time1 = 0
@@ -268,6 +314,7 @@ time2 = 0
 time3 = 0
 time4 = 0
 time5 = 0
+current_time = 0
 need_check_sf = False
 need_check_ps = False
 need_check_pt = False
@@ -281,11 +328,16 @@ cooldown_pot = 0
 cooldown_time_passed_snf = 0
 cooldown_time_passed_psh = 0
 cooldown_time_passed_pot = 0
+didWinUpdate = False
 sun_hitbox = None
 start_time = 0
 i = 0
+dt = 0
 imgcycle = -1
 current_img = pvz_zombie
+eat_cd = 0
+eat_timepassed = current_time
+last_cd_update = 0
 p = 1
 sunflowersuncheck = 0
 test = 0
@@ -311,7 +363,6 @@ while running:
 #       Если событие поднятие кнопки мыши
         ###############################
         if event.type == 1026:
-            print("A")
             if button_play_rect.collidepoint(event.pos) and mode == "1":
                 mode = "2"
             ######################################
@@ -335,6 +386,42 @@ while running:
                 time3 = 36000
                 time4 = 13000
                 time5 = 20000
+                plants = []
+                plantpos = []
+                pplantpos = []
+                sunflowerlist = []
+                money = 50
+                bullets = []
+                zom3cyc = [zembie, zembie, zembie, conzembie, conzembie, conzembie, conzembie, zembie, zembie, zembie,
+                           zembie, conzembie, zembie, conzembie, zembie, zembie, zembie, conzembie]
+                zom3cur = 0
+                zemb = zom3cyc[zom3cur]
+                zembies = []
+                zembietouch = [0,0,0,0,0]
+                zomie_img = [pvz_zombie, pvz_zombie1, pvz_zombie2, pvz_zombie3, pvz_zombie4, pvz_zombie5, pvz_zombie6,
+                             pvz_zombie7, pvz_zombie8, pvz_zombie9, pvz_zombie10, pvz_zombie11, pvz_zombie12,
+                             pvz_zombie13, pvz_zombie14]
+                time3cyc = [36000, 7000, 13000, 7000, 11000, 1000, 1000, 300, 500, 4000, 1000, 8000, 1000, 500, 1000,
+                            2000]
+                time3cur = 0
+                zom3ord = [1, 1, 2, 3, 1, 4, 2, 1, 1, 2, 3, 2, 1, 2, 1, 2, 1, 2, 3, 1]
+                zom3cor = -1
+                imgcycle = -1
+                current_img = pvz_zombie
+                lawnmows = []
+                for ab in range(6):
+                    lawnmows.append(pvz_lawnmower)
+                lawndata = []
+                yoffsett = 0
+                for ad in range(6):
+                    lawndata.append([screen_x / (100 / 15), screen_y / (875 / (125 + yoffsett))])
+                    yoffsett += 100
+                lawntouch = []
+                for ae in range(6):
+                    lawntouch.append(0)
+                lawnsound = []
+                for af in range(6):
+                    lawnsound.append(0)
             elif button_sunflower.collidepoint(event.pos) and mode == "3":
                 print("Вы выбрали подсолнуха")
                 if buttoncheck1 == 1:
@@ -355,6 +442,7 @@ while running:
                     buttoncheck1 = 0
                 else:
                     buttoncheck1 = 3
+                    clicked_grid = None
             elif button_delete.collidepoint(event.pos) and mode == "3":
                 print("hello")
                 buttoncheck1 = 0
@@ -406,6 +494,14 @@ while running:
         imgcycle_psh = 0
     current_psh_img = pvz_pshs[imgcycle_psh]
 
+    imgcycle_pot2 += 1
+    if imgcycle_pot2 == 2:
+        imgcycle_pot2 = 0
+        imgcycle_pot += 1
+    if imgcycle_pot == 12:
+        imgcycle_pot = 0
+    current_pot_img = pvz_pots[imgcycle_pot]
+
     if need_check_sf:
         cooldown_time_passed_snf = current_time - start_time_sf
         need_check_sf = False
@@ -448,7 +544,7 @@ while running:
                     plantpos.append(curpos)
                     pplantpos.append(purpos)
                     money -= 50
-                    plants.append(plant.Plant(screen, "Sunflower", 50, clicked_grid[0], clicked_grid[1], (((clicked_grid[1])-screen_y/(875/100)) // (screen_y/(875/80))), current_time+10000, current_time+19000))
+                    plants.append(plant.Plant(screen, screen_x, screen_y, "Sunflower", 50, clicked_grid[0], clicked_grid[1], (((clicked_grid[1])-screen_y/(875/100)) // (screen_y/(875/80))), current_time+10000, current_time+19000, 100))
                     text_money = button_font.render(f"Money: {money}", True, [0, 0, 0])
                     clicked_grid = None
                     buttoncheck1 = 0
@@ -462,7 +558,7 @@ while running:
                     plantpos.append(curpos)
                     pplantpos.append(purpos)
                     money -= 100
-                    ff = plant.Plant(screen, "Peashoot", 0, clicked_grid[0], clicked_grid[1], (((clicked_grid[1])-screen_y/(875/100)) // (screen_y/(875/80))), current_time, 0)
+                    ff = plant.Plant(screen, screen_x, screen_y,"Peashoot", 0, clicked_grid[0], clicked_grid[1], (((clicked_grid[1])-screen_y/(875/100)) // (screen_y/(875/80))), current_time, 0, 100)
                     plants.append(ff)
                     text_money = button_font.render(f"Money: {money}", True, [0, 0, 0])
                     clicked_grid = None
@@ -479,11 +575,16 @@ while running:
                     plantpos.append(curpos)
                     pplantpos.append(purpos)
                     money -= 50
-                    plants.append(plant.Plant(screen, "Wallnut", 0, clicked_grid[0], clicked_grid[1], (((clicked_grid[1])-screen_y/(875/100)) // (screen_y/(875/80))), 0, 0))
+                    ff = plant.Plant(screen, screen_x, screen_y,"Wallnut", 0, clicked_grid[0], clicked_grid[1],
+                                     (((clicked_grid[1]) - screen_y / (875 / 100)) // (screen_y / (875 / 80))),
+                                     current_time, 0, 300)
+                    plants.append(ff)
                     text_money = button_font.render(f"Money: {money}", True, [0, 0, 0])
                     clicked_grid = None
+                    if ff.row < 4.0:
+                        ff.row += 1.0
                     buttoncheck1 = 0
-                    cooldown_pot = 15000
+                    cooldown_pot = 10000
     elif deletecheck == 1:
         if clicked_grid:
             matchx = clicked_grid[0]
@@ -499,6 +600,8 @@ while running:
                     deletecheck = 0
             clicked_grid = None
             deletecheck = 0
+
+    dt = clock.tick(60) / 1000
 
     if mode == "1":
         # Размещаем прямоугольник на экране
@@ -547,7 +650,7 @@ while running:
                 zom3cur += 1
                 zom3cor += 1
                 print("ue")
-                zemb = enemy.Enemy(100, 1, screen, screen_x/(1+3/17), 140, 100, 100, random.randint(1, 6))
+                zemb = enemy.Enemy(100, 1, screen, screen_x/(1+3/17), 140, 100, 100, random.randint(1, 6), False, None)
                 zembies.append(zemb)
             zomcreat = True
         timee = 1
@@ -572,6 +675,14 @@ while running:
             else:
                 pygame.draw.rect(screen, [coolor2-5, coolor1-5, coolor2-5], i)
                 lawnc = 1
+        housec = 1
+        for ak in houses:
+            if housec == 1:
+                pygame.draw.rect(screen, [coolor2, coolor2, coolor1], ak)
+                housec = 2
+            else:
+                pygame.draw.rect(screen, [coolor2-5, coolor2-5, coolor1-5], ak)
+                housec = 1
         for q in plants:
             if q.plant == "Sunflower":
                 q.appear(current_snf_img)
@@ -589,10 +700,11 @@ while running:
                     if zombie_in_row:
                         print(f"hi from {q.row}")
                         print("bullet")
-                        bullets.append([10, 1, (q.pos_x+screen_x/25), q.pos_y, q.row])
-                    q.time = current_time + 5000
+                        bullets.append([9.5, 1, (q.pos_x+screen_x/25), q.pos_y, q.row])
+                    q.time = current_time + 2500
             if q.plant == "Wallnut":
-                q.appear(pvz_wallnut)
+                q.appear(current_pot_img)
+                pygame.draw.rect(screen, [192,40,28], q.rect)
         for aj in sunflowerlist:
             aj.sunappear(screen)
         for ah in bullets:
@@ -601,16 +713,16 @@ while running:
             for ai in zembies:
                 if int(ai.pos_x)-10 < int(ah[2]) < int(ai.pos_x)+5 and ah[4] == ai.zrng:
                     bullets.pop(bullets.index(ah))
-                    ai.hp -= 25
+                    ai.hp -= 9.5
             screen.blit(pvz_pea, [ah[2], (ah[3]+screen_y/70)])
-            ah[2] += ah[1] * screen_y/(875/1.1)
+            ah[2] += ah[1] * screen_y/(875/8) * dt * 60
         lawntime = 0
         for ac in lawnmows:
             if lawndata[lawntime][0] >= screen_x/(10/9):
                 lawndata[lawntime][0] = (2**31)-1
                 lawntouch[lawntime] = 0
             if lawntouch[lawntime] == 1:
-                lawndata[lawntime][0] += screen_x/1000
+                lawndata[lawntime][0] += screen_x/(1000/14) * dt * 60
                 for ak in zembies:
                     if ak.pos_x-10 < lawndata[lawntime][0] < ak.pos_x+5 and ak.zrng == lawntime+1:
                         zembies.pop(zembies.index(ak))
@@ -623,21 +735,54 @@ while running:
             sunflowerlist = []
             time5 += 10000
         for n in zembies:
-            n.pos_x -= 0.33 * n.speed
+            if not n.iseat:
+                n.pos_x -= 0.5 * n.speed * dt * 60
+                n.rectdraw([0,255,239])
+            else:
+                eat_cd += current_time - last_cd_update
+                last_cd_update = current_time
+                if eat_cd >= 1500:
+                    n.eating.hp -= 20
+                    if n.eating.hp < 1:
+                        try:
+                            plants.pop(plants.index(n.eating))
+                        except:
+                            pass
+                        n.iseat = False
+                        n.eating = None
+                    eat_cd = 0
+                    print("yum")
             n.pos_y = 80*n.zrng+(20*n.zrng)
             n.appear(current_img)
+            for al in plants:
+                if n.rect.colliderect(al.rect):
+                    n.iseat = True
+                    n.eating = al
+            pygame.draw.rect(screen, [0,255,0], n.rect)
             if n.hp <= 0:
                 zembies.pop(zembies.index(n))
             if n.pos_x < screen_x/(1000/100):
+                if zembietouch[n.zrng-1] == 1:
+                    mode = "1"
+                zembietouch[n.zrng-1] = 1
                 lawntouch[n.zrng-1] = 1
                 if lawnsound[n.zrng-1] == 0:
                     lawnsound[n.zrng-1] = 1
                 zembies.pop(zembies.index(n))
                 print("delete")
                 print(n.zrng)
-        pygame.draw.rect(screen, [209, 209, 209], button_sunflower)
-        pygame.draw.rect(screen, [209, 209, 209], button_peashooter)
-        pygame.draw.rect(screen, [209, 209, 209], button_wallnut)
+        if not cooldown_snf:
+            pygame.draw.rect(screen, [209, 209, 209], button_sunflower)
+        else:
+            pygame.draw.rect(screen, [209,0,0], button_sunflower)
+        if not cooldown_psh:
+            pygame.draw.rect(screen, [209, 209, 209], button_peashooter)
+        else:
+            pygame.draw.rect(screen, [209, 0, 0], button_peashooter)
+        if not cooldown_pot:
+            pygame.draw.rect(screen, [209, 209, 209], button_wallnut)
+        else:
+            pygame.draw.rect(screen, [209, 0, 0], button_wallnut)
         if deletecheck == 0:
             pygame.draw.rect(screen, [144,144,144], button_delete)
         else:
@@ -669,11 +814,16 @@ while running:
                 screen.blit(text_plant, [screen_x / (2 + 23 / 51), screen_y / (7 / 2)])
         if zom3cur == 12 and len(zembies) == 0:
             screen.blit(text_win, [screen_x / (2 + 23 / 51), screen_y / (7 / 2)])
-            win_time = current_time
+            if not didWinUpdate:
+                win_time = current_time
+                didWinUpdate = True
         if current_time >= win_time+5000 and win_time != 0:
             mode = "1"
+            print("hello hi")
+        else:
+            pass
     c1 = 0
     gri = 0
     pygame.display.flip()
-    clock.tick(240)  # Кадры в секунду
+    clock.tick(60)  # Кадры в секунду
 pygame.display.quit()
