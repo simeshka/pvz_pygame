@@ -323,6 +323,8 @@ text_set = button_font.render("Set...", True, [255,0,0])
 text_plant = button_font.render("PLANT!!!", True, [255,0,0])
 text_level1 = button_font.render("Level 1", True, [255,0,255])
 text_win = button_font.render("YOU WIN!", True, [255,255,0])
+text_locked = button_font.render("Locked", True, [255,0,0])
+text_newplant = button_font.render("You got a new plant!", True, [255,0,0])
 
 track_main.play(2**10)
 imgcycle_snf = -1
@@ -333,6 +335,7 @@ imgcycle_pot = -1
 imgcycle_pot2 = 0
 imgcycle_wnnc = -1
 imgcycle_wnnc2 = 0
+level = "0"
 pss = 0
 time0 = 0
 time1 = 0
@@ -384,6 +387,7 @@ clicked_grid = None
 buttoncheck1 = 0
 zomcreat = False
 win_time = 0
+didbeatlevel1 = False
 running = True
 # бесконечный игровой цикл чтобы игра не заканчивалась
 while running:
@@ -411,6 +415,53 @@ while running:
                     tmv_check = 1
                     volume = 0.1
             elif button_level_one.collidepoint(event.pos) and mode == "2":
+                level = "1"
+                mode = "3"
+                start_time: int = pygame.time.get_ticks()
+                time0 = 3000
+                time1 = 13000
+                time2 = 1000
+                time3 = 36000
+                time4 = 13000
+                time5 = 20000
+                plants = []
+                plantpos = []
+                pplantpos = []
+                sunflowerlist = []
+                money = 50
+                bullets = []
+                zom3cyc = ["normal", "normal", "normal", "cone", "cone", "cone", "cone", "normal", "normal", "normal", "dancer", "cone", "normal", "cone", "digger", "normal", "dancer", "digger"]
+                zom3cur = 0
+                cd_passed_dance = 0
+                zemb = zom3cyc[zom3cur]
+                zembies = []
+                zembietouch = [0,0,0,0,0]
+                zomie_img = [pvz_zombie, pvz_zombie1, pvz_zombie2, pvz_zombie3, pvz_zombie4, pvz_zombie5, pvz_zombie6,
+                             pvz_zombie7, pvz_zombie8, pvz_zombie9, pvz_zombie10, pvz_zombie11, pvz_zombie12,
+                             pvz_zombie13, pvz_zombie14]
+                time3cyc = [36000, 7000, 13000, 7000, 11000, 1000, 1000, 300, 500, 4000, 1000, 8000, 1000, 500, 1000,
+                            2000]
+                time3cur = 0
+                zom3ord = [1, 1, 2, 3, 1, 4, 2, 1, 1, 2, 3, 2, 1, 2, 1, 2, 1, 2, 3, 1]
+                zom3cor = -1
+                imgcycle = -1
+                current_img = pvz_zombie
+                lawnmows = []
+                for ab in range(6):
+                    lawnmows.append(pvz_lawnmower)
+                lawndata = []
+                yoffsett = 0
+                for ad in range(6):
+                    lawndata.append([screen_x / (100 / 15), screen_y / (875 / (125 + yoffsett))])
+                    yoffsett += 100
+                lawntouch = []
+                for ae in range(6):
+                    lawntouch.append(0)
+                lawnsound = []
+                for af in range(6):
+                    lawnsound.append(0)
+            elif button_level_two.collidepoint(event.pos) and mode == "2" and didbeatlevel1 == True:
+                level = "2"
                 mode = "3"
                 start_time: int = pygame.time.get_ticks()
                 time0 = 3000
@@ -476,7 +527,7 @@ while running:
                 else:
                     buttoncheck1 = 3
                     clicked_grid = None
-            elif button_potatomine.collidepoint(event.pos) and mode == "3":
+            elif button_potatomine.collidepoint(event.pos) and mode == "3" and level == "2":
                 print("potatomine")
                 if buttoncheck1 == 4:
                     buttoncheck1 = 0
@@ -718,6 +769,8 @@ while running:
 
         pygame.draw.rect(screen,[117,117,117], button_level_one)
         pygame.draw.rect(screen, [117, 117, 117], button_level_two)
+        if not didbeatlevel1:
+            screen.blit(text_locked, [screen_x/(29/12),screen_y/2.13])
         pygame.draw.rect(screen, [117, 117, 117], button_level_three)
     elif mode == "3":
         screen.blit(pvz_house, [0, 0])
@@ -899,10 +952,6 @@ while running:
             pygame.draw.rect(screen, [209, 209, 209], button_wallnut)
         else:
             pygame.draw.rect(screen, [209, 0, 0], button_wallnut)
-        if not cooldown_wnnc:
-            pygame.draw.rect(screen, [209, 209, 209], button_potatomine)
-        else:
-            pygame.draw.rect(screen, [209, 0, 0], button_potatomine)
         if deletecheck == 0:
             pygame.draw.rect(screen, [144,144,144], button_delete)
         else:
@@ -911,7 +960,12 @@ while running:
         screen.blit(pvz_wallnut, [screen_x/(33+1/3), screen_y/(3+3/4)])
         screen.blit(pvz_peashooter, [screen_x/(33+1/3), screen_y/7])
         screen.blit(pvz_sunflower, [screen_x/(33+1/3), screen_y/50])
-        screen.blit(pvz_potatomine1, [screen_x / (33 + 1 / 3), screen_y /2.521614])
+        if level == "2":
+            if not cooldown_wnnc:
+                pygame.draw.rect(screen, [209, 209, 209], button_potatomine)
+            else:
+                pygame.draw.rect(screen, [209, 0, 0], button_potatomine)
+            screen.blit(pvz_potatomine1, [screen_x / (33 + 1 / 3), screen_y /2.521614])
         if att3 == 1:
             sun_hitbox = pygame.Rect(starX, starY, screen_x/21, screen_y/15)
             screen.blit(pvz_sun, [starX, starY])
@@ -925,6 +979,7 @@ while running:
         pygame.draw.ellipse(screen, [99, 95, 93], button_sound_rect)
         screen.blit(pvz_soundbut, [screen_x / 100, screen_y / (35 / 32)])
         screen.blit(text_money, [screen_x/(1000/60),screen_y/(70/65)])
+        text_level1 = button_font.render(f"Level {level}", True, [255,0,255])
         screen.blit(text_level1, [0, screen_y/(17/14)])
         if time0 > current_time:
             if 0 < current_time < 1000:
@@ -935,6 +990,9 @@ while running:
                 screen.blit(text_plant, [screen_x / (2 + 23 / 51), screen_y / (7 / 2)])
         if zom3cur == 12 and len(zembies) == 0:
             screen.blit(text_win, [screen_x / (2 + 23 / 51), screen_y / (7 / 2)])
+            screen.blit(text_newplant, [screen_x / (3 + 13 / 51), screen_y / 2.7])
+            if level == "1":
+                didbeatlevel1 = True
             if not didWinUpdate:
                 win_time = current_time
                 didWinUpdate = True
