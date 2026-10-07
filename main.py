@@ -8,6 +8,7 @@ import enemy
 import entity
 import plant
 
+
 pygame.init() # Инициализация pygame
 clock = pygame.time.Clock()
 screen_x = 1250
@@ -192,6 +193,36 @@ pvz_potatomine5 = pygame.image.load("images/PotatoMine/PotatoMine_5.png")
 pvz_potatomine6 = pygame.image.load("images/PotatoMine/PotatoMine_6.png")
 pvz_potatomine7 = pygame.image.load("images/PotatoMine/PotatoMine_7.png")
 pvz_potatomine8 = pygame.image.load("images/PotatoMine/PotatoMine_8.png")
+pvz_zombiedie1 = pygame.image.load("images/Zombie/Die/ZombieDie_1.png")
+pvz_zombiedie2 = pygame.image.load("images/Zombie/Die/ZombieDie_2.png")
+pvz_zombiedie3 = pygame.image.load("images/Zombie/Die/ZombieDie_3.png")
+pvz_zombiedie4 = pygame.image.load("images/Zombie/Die/ZombieDie_4.png")
+pvz_zombiedie5 = pygame.image.load("images/Zombie/Die/ZombieDie_5.png")
+pvz_zombiedie6 = pygame.image.load("images/Zombie/Die/ZombieDie_6.png")
+pvz_zombiedie7 = pygame.image.load("images/Zombie/Die/ZombieDie_7.png")
+pvz_zombiedie8 = pygame.image.load("images/Zombie/Die/ZombieDie_8.png")
+pvz_zombiedie9 = pygame.image.load("images/Zombie/Die/ZombieDie_9.png")
+pvz_zombieattack1 = pygame.image.load("images/Zombie/Attack/ZombieAttack_1.png")
+pvz_zombieattack2 = pygame.image.load("images/Zombie/Attack/ZombieAttack_2.png")
+pvz_zombieattack3 = pygame.image.load("images/Zombie/Attack/ZombieAttack_3.png")
+pvz_zombieattack4 = pygame.image.load("images/Zombie/Attack/ZombieAttack_4.png")
+pvz_zombieattack5 = pygame.image.load("images/Zombie/Attack/ZombieAttack_5.png")
+pvz_zombieattack6 = pygame.image.load("images/Zombie/Attack/ZombieAttack_6.png")
+pvz_zombieattack7 = pygame.image.load("images/Zombie/Attack/ZombieAttack_7.png")
+pvz_zombieattack8 = pygame.image.load("images/Zombie/Attack/ZombieAttack_8.png")
+pvz_zombieattack9 = pygame.image.load("images/Zombie/Attack/ZombieAttack_9.png")
+pvz_zombieattack10 = pygame.image.load("images/Zombie/Attack/ZombieAttack_10.png")
+pvz_zombieattack11 = pygame.image.load("images/Zombie/Attack/ZombieAttack_11.png")
+pvz_zombieattack12 = pygame.image.load("images/Zombie/Attack/ZombieAttack_12.png")
+pvz_zombieattack13 = pygame.image.load("images/Zombie/Attack/ZombieAttack_13.png")
+pvz_zombieattack14 = pygame.image.load("images/Zombie/Attack/ZombieAttack_14.png")
+pvz_zombieattack15 = pygame.image.load("images/Zombie/Attack/ZombieAttack_15.png")
+pvz_zombieattack16 = pygame.image.load("images/Zombie/Attack/ZombieAttack_16.png")
+pvz_zombieattack17 = pygame.image.load("images/Zombie/Attack/ZombieAttack_17.png")
+pvz_zombieattack18 = pygame.image.load("images/Zombie/Attack/ZombieAttack_18.png")
+pvz_zombieattack19 = pygame.image.load("images/Zombie/Attack/ZombieAttack_19.png")
+pvz_zombieattack20 = pygame.image.load("images/Zombie/Attack/ZombieAttack_20.png")
+pvz_zombieattack21 = pygame.image.load("images/Zombie/Attack/ZombieAttack_21.png")
 
 plants = []
 plantpos = []
@@ -371,6 +402,14 @@ i = 0
 dt = 0
 imgcycle = -1
 current_img = pvz_zombie
+cimgcycle = -1
+ccurrent_img = pvz_czombie
+bimgcycle = -1
+bcurrent_img = pvz_bzombie
+digimgcycle = -1
+digcurrent_img = pvz_digzombie
+disimgcycle = -1
+discurrent_img = pvz_diszombie
 eat_cd = 0
 eat_timepassed = current_time
 last_cd_update = 0
@@ -388,7 +427,15 @@ buttoncheck1 = 0
 zomcreat = False
 win_time = 0
 didbeatlevel1 = False
+max_level = 1
 running = True
+
+try:
+    with open("save.txt") as f:
+        max_level = int(f.read())
+except:
+    max_level = 1
+
 # бесконечный игровой цикл чтобы игра не заканчивалась
 while running:
     # ПЕРВЫЙ ЭТАП игрового цикла проверка событий в игре
@@ -430,7 +477,7 @@ while running:
                 sunflowerlist = []
                 money = 50
                 bullets = []
-                zom3cyc = ["normal", "normal", "normal", "cone", "cone", "cone", "cone", "normal", "normal", "normal", "dancer", "cone", "normal", "cone", "digger", "normal", "dancer", "digger"]
+                zom3cyc = ["normal", "normal", "normal", "cone", "cone", "cone", "bucket", "normal", "normal", "normal", "dancer", "cone", "normal", "bucket", "digger", "normal", "dancer", "digger"]
                 zom3cur = 0
                 cd_passed_dance = 0
                 zemb = zom3cyc[zom3cur]
@@ -460,7 +507,7 @@ while running:
                 lawnsound = []
                 for af in range(6):
                     lawnsound.append(0)
-            elif button_level_two.collidepoint(event.pos) and mode == "2" and didbeatlevel1 == True:
+            elif button_level_two.collidepoint(event.pos) and mode == "2" and max_level >= 2:
                 level = "2"
                 mode = "3"
                 start_time: int = pygame.time.get_ticks()
@@ -574,6 +621,7 @@ while running:
     sfx_tap.set_volume(volume)
 
     # ТРЕТИЙ ЭТАП игрового цикла отображение предметов на экране
+
     screen.fill(screen_color)
 
     text_money = button_font.render(f"Money: {money}", True, [0, 0, 0])
@@ -744,6 +792,9 @@ while running:
 
     dt = clock.tick(60) / 1000
 
+    if max_level > 1:
+        didbeatlevel1 = True
+
     if mode == "1":
         # Размещаем прямоугольник на экране
         screen.blit(pvz_main_img, [0,0]) # ШАГ 3: Отображаем изображение на экране
@@ -768,8 +819,9 @@ while running:
         screen.blit(pvz_soundbut, [screen_x / 100, screen_y / (35 / 32)])
 
         pygame.draw.rect(screen,[117,117,117], button_level_one)
-        pygame.draw.rect(screen, [117, 117, 117], button_level_two)
-        if not didbeatlevel1:
+        if max_level >= 2:
+            pygame.draw.rect(screen, [117, 117, 117], button_level_two)
+        else:
             screen.blit(text_locked, [screen_x/(29/12),screen_y/2.13])
         pygame.draw.rect(screen, [117, 117, 117], button_level_three)
     elif mode == "3":
@@ -780,9 +832,19 @@ while running:
         if time2 < current_time:
             if imgcycle > 13:
                 imgcycle = -1
+            if bimgcycle > 13:
+                bimgcycle = -1
+            if cimgcycle > 19:
+                cimgcycle = -1
             imgcycle += 1
+            bimgcycle += 1
+            cimgcycle += 1
             time2 += 100
-            current_img = bzomie_img[imgcycle]
+            current_img = zomie_img[imgcycle]
+            ccurrent_img = czomie_img[cimgcycle]
+            bcurrent_img = bzomie_img[bimgcycle]
+            digcurrent_img = digzomie_img[0]
+            discurrent_img = diszomie_img[0]
         if time3 < current_time:
             time3 += time3cyc[time3cur]
             if zom3cur < 12:
@@ -792,6 +854,7 @@ while running:
                 zamb = enemy.Enemy(100, 1, screen, screen_x/(1+3/17), 140, 100, 100, random.randint(1, 6), False, None, zemb)
                 if zamb.ztype == "dancer":
                     zamb.zrng = random.randint(2,5)
+                zemb = zom3cyc[zom3cur]
                 zembies.append(zamb)
                 sfx_groan.play(0)
             zomcreat = True
@@ -853,7 +916,7 @@ while running:
             if ah[2] == screen_x:
                 bullets.pop(bullets.index(ah))
             for ai in zembies:
-                if int(ai.pos_x)-10 < int(ah[2]) < int(ai.pos_x)+5 and ah[4] == ai.zrng:
+                if int(ai.pos_x)-5 < int(ah[2]) < int(ai.pos_x)+55 and ah[4] == ai.zrng:
                     try:
                         bullets.pop(bullets.index(ah))
                     except:
@@ -906,13 +969,21 @@ while running:
                             ao.eating = None
                     eat_cd = 0
                     print("yum")
+            if n.ztype == "normal":
+                n.appear(current_img)
+            if n.ztype == "cone":
+                n.appear(ccurrent_img)
+            if n.ztype == "bucket":
+                n.appear(bcurrent_img)
             if n.ztype == "digger":
+                n.appear(digcurrent_img)
                 cd_passed_mine += current_time - last_cd_update
                 last_cd_update = current_time
                 if cd_passed_mine >= 10000:
                     n.zrng = random.randint(1, 6)
                     cd_passed_mine = 0
             if n.ztype == "dancer":
+                n.appear(discurrent_img)
                 cd_passed_dance += current_time - last_cdp_update
                 last_cdp_update = current_time
                 if cd_passed_dance >= 20000:
@@ -922,7 +993,6 @@ while running:
                     zembies.append(enemy.Enemy(100, 1, screen, n.pos_x, n.pos_y+screen_x/(1250/100), 100, 100, n.zrng+1, False,None, "normal"))
                     zembies.append(enemy.Enemy(100, 1, screen, n.pos_x, n.pos_y-screen_x/(1250/100), 100, 100, n.zrng - 1, False,None, "normal"))
             n.pos_y = 80*n.zrng+(20*n.zrng)
-            n.appear(current_img)
             for al in plants:
                 if n.rect.colliderect(al.rect):
                     n.iseat = True
@@ -991,6 +1061,11 @@ while running:
         if zom3cur == 12 and len(zembies) == 0:
             screen.blit(text_win, [screen_x / (2 + 23 / 51), screen_y / (7 / 2)])
             screen.blit(text_newplant, [screen_x / (3 + 13 / 51), screen_y / 2.7])
+            beaten = int(level)
+            if max_level < beaten + 1:
+                max_level = beaten + 1
+                with open("save.txt", "w") as f:
+                    f.write(str(max_level))
             if level == "1":
                 didbeatlevel1 = True
             if not didWinUpdate:
