@@ -235,6 +235,10 @@ czomie_img = [pvz_czombie, pvz_czombie1, pvz_czombie2, pvz_czombie3, pvz_czombie
 diszomie_img = [pvz_diszombie]
 digzomie_img = [pvz_digzombie]
 
+zomiedie_img = [pvz_zombiedie1, pvz_zombiedie2, pvz_zombiedie3, pvz_zombiedie4, pvz_zombiedie5, pvz_zombiedie6, pvz_zombiedie7, pvz_zombiedie8, pvz_zombiedie9]
+zomieattack_img = [pvz_zombieattack1, pvz_zombieattack2, pvz_zombieattack3, pvz_zombieattack4, pvz_zombieattack5, pvz_zombieattack6, pvz_zombieattack7, pvz_zombieattack8, pvz_zombieattack9, pvz_zombieattack10, pvz_zombieattack11, pvz_zombieattack12, pvz_zombieattack13, pvz_zombieattack14, pvz_zombieattack15, pvz_zombieattack16, pvz_zombieattack17, pvz_zombieattack18, pvz_zombieattack19, pvz_zombieattack20, pvz_zombieattack21]
+
+
 pvz_main_img = pygame.transform.scale(pvz_main_img, [screen_x,screen_y]) # ШАГ 2: Делаем нам нужный размер
 pvz_house = pygame.transform.scale(pvz_house, [screen_x, screen_y])
 pvz_peashooter = pygame.transform.scale(pvz_peashooter, [screen_x/17,screen_y/12])
@@ -400,6 +404,7 @@ cd_passed_dance = 0
 last_cdp_update = 0
 i = 0
 dt = 0
+deadzembies = []
 imgcycle = -1
 current_img = pvz_zombie
 cimgcycle = -1
@@ -410,6 +415,10 @@ digimgcycle = -1
 digcurrent_img = pvz_digzombie
 disimgcycle = -1
 discurrent_img = pvz_diszombie
+attimgcycle = -1
+attcurrent_img = pvz_zombieattack1
+dieimgcycle = -1
+diecurrent_img = pvz_zombiedie1
 eat_cd = 0
 eat_timepassed = current_time
 last_cd_update = 0
@@ -836,15 +845,20 @@ while running:
                 bimgcycle = -1
             if cimgcycle > 19:
                 cimgcycle = -1
+            if attimgcycle > 19:
+                attimgcycle = -1
             imgcycle += 1
             bimgcycle += 1
             cimgcycle += 1
+            attimgcycle += 1
             time2 += 100
             current_img = zomie_img[imgcycle]
             ccurrent_img = czomie_img[cimgcycle]
             bcurrent_img = bzomie_img[bimgcycle]
             digcurrent_img = digzomie_img[0]
             discurrent_img = diszomie_img[0]
+            attcurrent_img = zomieattack_img[attimgcycle]
+
         if time3 < current_time:
             time3 += time3cyc[time3cur]
             if zom3cur < 12:
@@ -949,6 +963,8 @@ while running:
             if not n.iseat:
                 n.pos_x -= 0.5 * n.speed * dt * 60
             else:
+                if n.ztype == "normal":
+                    n.appear(attcurrent_img)
                 eat_cd += current_time - last_cd_update
                 last_cd_update = current_time
                 if eat_cd >= 1500:
@@ -969,7 +985,7 @@ while running:
                             ao.eating = None
                     eat_cd = 0
                     print("yum")
-            if n.ztype == "normal":
+            if n.ztype == "normal" and not n.iseat:
                 n.appear(current_img)
             if n.ztype == "cone":
                 n.appear(ccurrent_img)
@@ -998,8 +1014,18 @@ while running:
                     n.iseat = True
                     n.eating = al
             if n.hp <= 0:
-                zembies.pop(zembies.index(n))
-                sfx_death.play(0)
+                found = False
+                for ao in deadzembies:
+                    if ao[0] == n and ao[1] <= 0:
+                        zembies.pop(zembies.index(n))
+                        sfx_death.play(0)
+                    if ao[0] == n and ao[1] != 0:
+                        ao[1] -= current_time + ao[2]
+                        ao[2] = current_time
+                        found = True
+                if not found:
+                    deadzembies.append([n, 900, 0])
+                n.appear(pvz_zombiedie9)
             if n.pos_x < screen_x/(1000/100):
                 if zembietouch[n.zrng-1] == 1:
                     mode = "1"
