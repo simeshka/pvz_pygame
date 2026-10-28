@@ -2,7 +2,7 @@ import pygame
 import random
 
 class Enemy:
-    def __init__(self, hp: int, speed: int, screen, pos_x: int, pos_y: int, size_x: int, size_y: int, zrng: int, iseat: bool, eating, ztype: str):
+    def __init__(self, hp: int, speed: int, screen, pos_x: int, pos_y: int, size_x: int, size_y: int, zrng: int, iseat: bool, eating, ztype: str, deathtime: int):
         self.hp = hp
         self.speed = speed
         self.screen = screen
@@ -15,6 +15,7 @@ class Enemy:
         self.iseat = iseat
         self.eating = eating
         self.ztype = ztype
+        self.deathtime = deathtime
 
     def appear(self, img):
         self.screen.blit(img, [self.pos_x, self.pos_y])

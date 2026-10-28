@@ -1,7 +1,7 @@
 import pygame
 
 class Plant:
-    def __init__(self, screen, screen_x, screen_y, plant, sungive, pos_x, pos_y, row, time, time2, hp):
+    def __init__(self, screen, screen_x, screen_y, plant, sungive, pos_x, pos_y, row, time, time2, hp, isfrozen, frozencd, burncd):
         self.self = self
         self.screen = screen
         self.screen_x = screen_x
@@ -15,6 +15,9 @@ class Plant:
         self.time2 = time2
         self.hp = hp
         self.rect = pygame.Rect(pos_x, pos_y, screen_x/17, screen_y/12)
+        self.isfrozen = isfrozen
+        self.frozencd = frozencd
+        self.burncd = burncd
 
     def appear(self, img):
         self.screen.blit(img, [self.pos_x, self.pos_y])
