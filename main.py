@@ -494,6 +494,9 @@ while running:
                     tmv_check = 1
                     volume = 0.1
             elif button_level_one.collidepoint(event.pos) and mode == "2":
+                starX = 0
+                starY = 0
+                sun_hitbox = None
                 level = "1"
                 mode = "3"
                 start_time: int = pygame.time.get_ticks()
@@ -507,7 +510,7 @@ while running:
                 plantpos = []
                 pplantpos = []
                 sunflowerlist = []
-                money = 50
+                money = 50**292
                 bullets = []
                 zom3cyc = ["normal", "normal", "normal", "cone", "cone", "cone", "bucket", "normal", "normal", "normal", "dancer", "cone", "normal", "bucket", "digger", "normal", "dancer", "digger"]
                 zom3cur = 0
@@ -540,6 +543,9 @@ while running:
                 for af in range(6):
                     lawnsound.append(0)
             elif button_level_two.collidepoint(event.pos) and mode == "2" and max_level >= 2:
+                starX = 0
+                starY = 0
+                sun_hitbox = None
                 level = "2"
                 mode = "3"
                 start_time: int = pygame.time.get_ticks()
@@ -586,6 +592,9 @@ while running:
                 for af in range(6):
                     lawnsound.append(0)
             elif button_level_three.collidepoint(event.pos) and mode == "2" and max_level >= 3:
+                starX = 0
+                starY = 0
+                sun_hitbox = None
                 level = "3"
                 mode = "3"
                 start_time: int = pygame.time.get_ticks()
@@ -810,7 +819,7 @@ while running:
                     text_money = button_font.render(f"Money: {money}", True, [0, 0, 0])
                     clicked_grid = None
                     buttoncheck1 = 0
-                    cooldown_psh = 10000
+                    cooldown_psh = 10
     elif buttoncheck1 == 3:
         if clicked_grid:
             curpos = f"{str(clicked_grid[0] * 1000 + clicked_grid[1])}"
@@ -1238,7 +1247,7 @@ while running:
                 screen.blit(text_set, [screen_x / (2 + 23 / 51), screen_y / (7 / 2)])
             elif 2000 < current_time < 3000:
                 screen.blit(text_plant, [screen_x / (2 + 23 / 51), screen_y / (7 / 2)])
-        if zom3cur == 12 and len(zembies) == 0:
+        if zom3cur >= 12 and len(zembies) == 0:
             screen.blit(text_win, [screen_x / (2 + 23 / 51), screen_y / (7 / 2)])
             screen.blit(text_newplant, [screen_x / (3 + 13 / 51), screen_y / 2.7])
             beaten = int(level)
@@ -1252,6 +1261,7 @@ while running:
                 win_time = current_time
                 didWinUpdate = True
             sfx_trophy.play(0)
+            mode = "1"
         if current_time >= win_time+5000 and win_time != 0:
             mode = "1"
             sfx_losemusic.play(0)
