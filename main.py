@@ -15,7 +15,7 @@ screen_y = 875
 mode="1"
 screen=pygame.display.set_mode((screen_x, screen_y))
 screen_color=(117,0,0)
-
+#print(([int((aq.pos_x-(screen_x/(1250/247)))//100+1), int(aq.row)]) == [int(((n.pos_x-screen_x/(1000/190))//80)-1)-ar, n.zrng])
 starY = 0
 starX = random.randint(200, 900)
 
@@ -599,9 +599,9 @@ while running:
                 plantpos = []
                 pplantpos = []
                 sunflowerlist = []
-                money = 50**292
+                money = 50
                 bullets = []
-                zom3cyc = ["normal", "normal", "cone", "normal", "cone", "cone", "normal", "normal", "normal", "dancer", "cone", "dancer", "digger", "digger", "digger", "boss"]
+                zom3cyc = ["normal", "normal", "normal", "normal", "cone", "cone", "normal", "normal", "normal", "dancer", "cone", "dancer", "digger", "cone", "digger", "boss"]
                 zom3cur = 0
                 cd_passed_dance = 0
                 zemb = zom3cyc[zom3cur]
@@ -791,11 +791,11 @@ while running:
                     plantpos.append(curpos)
                     pplantpos.append(purpos)
                     money -= 50
-                    plants.append(plant.Plant(screen, screen_x, screen_y, "Sunflower", 50, clicked_grid[0], clicked_grid[1], (((clicked_grid[1])-screen_y/(875/100)) // (screen_y/(875/80))), current_time+10000, current_time+19000, 100, False, [0,0],[0,0]))
+                    plants.append(plant.Plant(screen, screen_x, screen_y, "Sunflower", 50, clicked_grid[0], clicked_grid[1], (clicked_grid[1]-(screen_y/(875/135)))//100+1, current_time+10000, current_time+19000, 100, False, [0,0],[0,0]))
                     text_money = button_font.render(f"Money: {money}", True, [0, 0, 0])
                     clicked_grid = None
                     buttoncheck1 = 0
-                    cooldown_snf = 75
+                    cooldown_snf = 7500
     elif buttoncheck1 == 2:
         if clicked_grid:
             curpos = f"{str(clicked_grid[0] * 1000 + clicked_grid[1])}"
@@ -805,14 +805,12 @@ while running:
                     plantpos.append(curpos)
                     pplantpos.append(purpos)
                     money -= 100
-                    ff = plant.Plant(screen, screen_x, screen_y,"Peashoot", 0, clicked_grid[0], clicked_grid[1], (((clicked_grid[1])-screen_y/(875/100)) // (screen_y/(875/80))), current_time, 0, 100, False, [0,0],[0,0])
+                    ff = plant.Plant(screen, screen_x, screen_y,"Peashoot", 0, clicked_grid[0], clicked_grid[1], (clicked_grid[1]-(screen_y/(875/135)))//100+1, current_time, 0, 100, False, [0,0],[0,0])
                     plants.append(ff)
                     text_money = button_font.render(f"Money: {money}", True, [0, 0, 0])
                     clicked_grid = None
-                    if ff.row < 4.0:
-                        ff.row += 1.0
                     buttoncheck1 = 0
-                    cooldown_psh = 10
+                    cooldown_psh = 10000
     elif buttoncheck1 == 3:
         if clicked_grid:
             curpos = f"{str(clicked_grid[0] * 1000 + clicked_grid[1])}"
@@ -823,15 +821,13 @@ while running:
                     pplantpos.append(purpos)
                     money -= 50
                     ff = plant.Plant(screen, screen_x, screen_y,"Wallnut", 0, clicked_grid[0], clicked_grid[1],
-                                     (((clicked_grid[1]) - screen_y / (875 / 100)) // (screen_y / (875 / 80))),
+                                     (clicked_grid[1]-(screen_y/(875/135)))//100+1,
                                      current_time, 0, 300, False, [0,0], [0,0])
                     plants.append(ff)
                     text_money = button_font.render(f"Money: {money}", True, [0, 0, 0])
                     clicked_grid = None
-                    if ff.row < 4.0:
-                        ff.row += 1.0
                     buttoncheck1 = 0
-                    cooldown_pot = 10
+                    cooldown_pot = 10000
     elif buttoncheck1 == 4:
         if clicked_grid:
             curpos = f"{str(clicked_grid[0] * 1000 + clicked_grid[1])}"
@@ -842,15 +838,13 @@ while running:
                     pplantpos.append(purpos)
                     money -= 25
                     ff = plant.Plant(screen, screen_x, screen_y,"PotatoMine", 0, clicked_grid[0], clicked_grid[1],
-                                     (((clicked_grid[1]) - screen_y / (875 / 100)) // (screen_y / (875 / 80))),
+                                     (clicked_grid[1]-(screen_y/(875/135)))//100+1,
                                      current_time, 0, 20, False, [0, 0], [0,0])
                     plants.append(ff)
                     text_money = button_font.render(f"Money: {money}", True, [0, 0, 0])
                     clicked_grid = None
-                    if ff.row < 4.0:
-                        ff.row += 1.0
                     buttoncheck1 = 0
-                    cooldown_wnnc = 75
+                    cooldown_wnnc = 7500
     elif deletecheck == 1:
         if clicked_grid:
             matchx = clicked_grid[0]
@@ -932,7 +926,7 @@ while running:
             attcurrent_img = zomieattack_img[attimgcycle]
 
         if time3 < current_time:
-            time3 += time3cyc[time3cur] / 100
+            time3 += time3cyc[time3cur]
             if zom3cur < 15:
                 time3cur += 1
                 zom3cur += 1
@@ -1140,14 +1134,14 @@ while running:
                     if fireorice == 1:
                         for aq in plants:
                             for ar in range(6):
-                                if ([int((aq.pos_x - (screen_x / (1250 / 240))) // 100) + 1, int(aq.row)]) == [int(((n.pos_x-screen_x/(1000/190))//80)-1)-ar, n.zrng]:
+                                if ([int((aq.pos_x-(screen_x/(1250/247)))//100+1), int(aq.row)]) == [int((n.pos_x-(screen_x/(1250/247)))//100+1)-ar, n.zrng]:
                                     aq.isfrozen = True
                                     aq.frozencd[0] = 8000
                                     aq.frozencd[1] = current_time
                     if fireorice == 2:
                         for aq in plants:
                             for ar in range(6):
-                                if ([int((aq.pos_x - (screen_x / (1250 / 240))) // 100) + 1, int(aq.row)]) == [int(((n.pos_x-screen_x/(1000/190))//80)-1)-ar, n.zrng]:
+                                if ([int((aq.pos_x-(screen_x/(1250/247)))//100+1), int(aq.row)]) == [int((n.pos_x-(screen_x/(1250/247)))//100+1)-ar, n.zrng]:
                                     aq.burncd[0] = 400
                                     aq.burncd[1] = current_time
                 if cd_passed_boss >= 45000:
@@ -1162,7 +1156,7 @@ while running:
                 if cd_passed_boss2 >= 40000:
                     cd_passed_boss2 = 0
                     for ap in plants:
-                        plant_pos = ([int((ap.pos_x - (screen_x / (1250 / 240))) // 100) + 1, int(ap.row)])
+                        plant_pos = [int((ap.pos_x-(screen_x/(1250/247)))//100+1), int(ap.row)]
                         zomb_pos = [int(((n.pos_x-screen_x/(1000/190))//80)-1), n.zrng]
                         for at in range(3):
                             for au in range(2):
@@ -1186,12 +1180,13 @@ while running:
                     deadzembies.append([n, 900, 0])
                 n.appear(pvz_zombiedie9)
             if n.pos_x < screen_x/(1000/100):
-                #if zembietouch[n.zrng-1] == 1:
-                    #mode = "1"
-                #zembietouch[n.zrng-1] = 1
-                #lawntouch[n.zrng-1] = 1
-                #if lawnsound[n.zrng-1] == 0:
-                    #lawnsound[n.zrng-1] = 1
+                print(f"{n.zrng}, {n.zrng-1}")
+                if zembietouch[n.zrng-1] == 1:
+                    mode = "1"
+                zembietouch[n.zrng-1] = 1
+                lawntouch[n.zrng-1] = 1
+                if lawnsound[n.zrng-1] == 0:
+                    lawnsound[n.zrng-1] = 1
                 zembies.pop(zembies.index(n))
                 print("delete")
                 print(n.zrng)
