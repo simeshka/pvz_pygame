@@ -6,5 +6,5 @@ save_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "save.json"
 # os.path.dirname - оставляет только название папки, и уберает имя файла
 # os.path.join - склеивает папку и файл через /
 data = {
-    max_level: "1"
+    "max_level": 1
 }
